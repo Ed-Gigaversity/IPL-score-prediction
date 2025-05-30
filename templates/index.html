@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Score Predictor - Professional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f6f8fa;
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 40px auto;
+            padding: 40px 40px 0 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            color: #2d3748;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: #3b3b3b;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 6px;
+            font-weight: 400;
+        }
+
+        .header .description {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 30px;
+            align-items: start;
+        }
+
+        .prediction-card, .results-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            min-width: 340px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .prediction-card:hover, .results-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .predict-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .predict-btn:hover::before {
+            left: 100%;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .predict-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .prediction-result {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .predicted-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-range {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .confidence {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .feature-highlight {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .highlight-description {
+            color: #047857;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                max-width: 98vw;
+                padding: 10px 2vw 0 2vw;
+            }
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .prediction-card, .results-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .prediction-card, .results-card {
+                padding: 20px;
+            }
+        }
+
+        .cricket-animation {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="cricket-animation">🏏</div>
+            <h1>IPL Score Predictor</h1>
+            <p class="subtitle">Professional First Innings Score Prediction</p>
+            <p class="description">Powered by Machine Learning • Accurate • Fast • IPL 2024</p>
+        </div>
+        <div class="main-grid">
+            <div class="prediction-card">
+                <h2 class="card-title">Enter Match Details</h2>
+                <form id="predictionForm" method="POST" action="/predict">
+                    <div class="form-group">
+                        <label for="batting-team">Batting Team</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <select id="batting-team" name="batting-team" required onchange="updateTeamLogo('batting')">
+                                <option value="">Select Batting Team</option>
+                                <option value="Chennai Super Kings">Chennai Super Kings (CSK)</option>
+                                <option value="Mumbai Indians">Mumbai Indians (MI)</option>
+                                <option value="Royal Challengers Bangalore">Royal Challengers Bangalore (RCB)</option>
+                                <option value="Delhi Daredevils">Delhi Daredevils (DD)</option>
+                                <option value="Kolkata Knight Riders">Kolkata Knight Riders (KKR)</option>
+                                <option value="Kings XI Punjab">Kings XI Punjab (KXIP)</option>
+                                <option value="Rajasthan Royals">Rajasthan Royals (RR)</option>
+                                <option value="Sunrisers Hyderabad">Sunrisers Hyderabad (SRH)</option>
+                            </select>
+                            <img id="batting-logo" src="" alt="" style="height:38px;display:none;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bowling-team">Bowling Team</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <select id="bowling-team" name="bowling-team" required onchange="updateTeamLogo('bowling')">
+                                <option value="">Select Bowling Team</option>
+                                <option value="Chennai Super Kings">Chennai Super Kings (CSK)</option>
+                                <option value="Mumbai Indians">Mumbai Indians (MI)</option>
+                                <option value="Royal Challengers Bangalore">Royal Challengers Bangalore (RCB)</option>
+                                <option value="Delhi Daredevils">Delhi Daredevils (DD)</option>
+                                <option value="Kolkata Knight Riders">Kolkata Knight Riders (KKR)</option>
+                                <option value="Kings XI Punjab">Kings XI Punjab (KXIP)</option>
+                                <option value="Rajasthan Royals">Rajasthan Royals (RR)</option>
+                                <option value="Sunrisers Hyderabad">Sunrisers Hyderabad (SRH)</option>
+                            </select>
+                            <img id="bowling-logo" src="" alt="" style="height:38px;display:none;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="overs">Overs Completed (≥ 5.0)</label>
+                        <input type="number" id="overs" name="overs" min="5" max="20" step="0.1" value="8.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="runs">Current Runs</label>
+                        <input type="number" id="runs" name="runs" min="0" max="300" value="64" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wickets">Wickets Lost</label>
+                        <input type="number" id="wickets" name="wickets" min="0" max="10" value="4" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="runs_in_prev_5">Runs in Previous 5 Overs</label>
+                        <input type="number" id="runs_in_prev_5" name="runs_in_prev_5" min="0" max="150" value="42" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wickets_in_prev_5">Wickets in Previous 5 Overs</label>
+                        <input type="number" id="wickets_in_prev_5" name="wickets_in_prev_5" min="0" max="10" value="3" required>
+                    </div>
+                    <button type="submit" class="predict-btn">Predict Final Score</button>
+                </form>
+            </div>
+            <div class="results-card">
+                <h2 class="card-title">Prediction Results</h2>
+                <div class="feature-highlight">
+                    <div class="highlight-title">How it works</div>
+                    <p class="highlight-description">Enter the current match situation and get a professional, ML-powered first innings score prediction for IPL matches. The model considers team, runs, wickets, and recent performance for accuracy.</p>
+                </div>
+                <div class="prediction-result" id="predictionResult" style="display:none">
+                    <div class="predicted-score" id="predictedScore"></div>
+                    <div class="score-range" id="scoreRange"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const teamLogos = {
+            'Chennai Super Kings': 'csk.png',
+            'Mumbai Indians': 'mi.jpg',
+            'Royal Challengers Bangalore': 'rcb.png',
+            'Delhi Daredevils': 'dc.png',
+            'Kolkata Knight Riders': 'kkr.jpg',
+            'Kings XI Punjab': 'kxip.png',
+            'Rajasthan Royals': 'rr.png',
+            'Sunrisers Hyderabad': 'srh.png'
+        };
+        function updateTeamLogo(type) {
+            const select = document.getElementById(type + '-team');
+            const logo = document.getElementById(type + '-logo');
+            const team = select.value;
+            if (teamLogos[team]) {
+                logo.src = '/static/' + teamLogos[team];
+                logo.style.display = 'inline-block';
+                logo.alt = team + ' logo';
+            } else {
+                logo.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
