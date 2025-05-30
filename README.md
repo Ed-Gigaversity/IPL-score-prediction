@@ -12,18 +12,6 @@ This project is a machine learning web application that predicts the first innin
 - Team logos shown for both input and results for a professional look
 - Ready for deployment (e.g., Heroku)
 
-## Demo
-A glimpse of the web app:
-
-![Web App Demo](readme_resources/ipl-first-innings-score-web-app.gif)
-
-## Live App
-You can try the deployed app here:
-[https://ipl-first-innings-score.herokuapp.com](https://ipl-first-innings-score.herokuapp.com)
-
-> **Note:** If you see an application error (see image below), it may be due to Heroku's free dyno limits. Please try again later or deploy locally.
-
-![Heroku Error](readme_resources/application-error-heroku.png)
 
 ## Project Structure
 ```
