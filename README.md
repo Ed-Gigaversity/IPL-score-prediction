@@ -63,6 +63,13 @@ This project is a machine learning web application that predicts the first innin
    ```
    The app will be available at `http://127.0.0.1:5000/`.
 
+## Getting the IPL Dataset
+The file `ipl.csv` is not tracked in this repository due to its size and licensing. You can download a similar IPL ball-by-ball dataset from Kaggle:
+
+- [IPL Ball-by-Ball 2008-2020 Dataset on Kaggle](https://www.kaggle.com/datasets/patrickb1912/ipl-complete-dataset-2008-2020)
+
+After downloading, place the relevant CSV file (usually named `IPL Ball-by-Ball 2008-2020.csv` or similar) in the project root and rename it to `ipl.csv` if needed.
+
 ## Usage
 - Open the web app in your browser.
 - Select the batting and bowling teams (team logos will appear), enter the current match stats, and click Predict.
