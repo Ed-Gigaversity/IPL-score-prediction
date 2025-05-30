@@ -66,7 +66,7 @@ This project is a machine learning web application that predicts the first innin
 ## Getting the IPL Dataset
 The file `ipl.csv` is not tracked in this repository due to its size and licensing. You can download a similar IPL ball-by-ball dataset from Kaggle:
 
-- [IPL Ball-by-Ball 2008-2020 Dataset on Kaggle](https://www.kaggle.com/datasets/patrickb1912/ipl-complete-dataset-2008-2020)
+- [IPL Ball-by-Ball 2008-2020 Dataset on Kaggle](https://www.kaggle.com/datasets/patrickb1912/ipl-complete-dataset-20082020)
 
 After downloading, place the relevant CSV file (usually named `IPL Ball-by-Ball 2008-2020.csv` or similar) in the project root and rename it to `ipl.csv` if needed.
 
